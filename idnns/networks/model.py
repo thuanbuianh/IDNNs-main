@@ -81,7 +81,7 @@ class Model:
 			self.hidden, self.inputs, self.weights_all, self.biases_all = [], [], [], []
 			last_hidden = self.x
 			if self.covnet == 1:
-				y_conv, self._drouput, self.hidden, self.inputs = deepnn(self.x)
+				y_conv, self._drouput, self.hidden, self.inputs = deepnn(self.x, self.layerSize[1])
 			elif self.covnet == 2:
 				y_c, self.hidden, self.inputs = multi_layer_perceptron(self.x, self.input_size, self.num_of_classes,
 				                                                       self.layerSize[0], self.layerSize[1])

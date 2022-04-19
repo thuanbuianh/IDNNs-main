@@ -39,7 +39,7 @@ def multi_layer_perceptron(x, n_input, n_classes, n_hidden_1, n_hidden_2):
 	return y_output, hidden, input
 
 
-def deepnn(x):
+def deepnn(x, num_filters):
 	"""deepnn builds the graph for a deep net for classifying digits.
 	Args:
 	  x: an input tensor with the dimensions (N_examples, 784), where 784 is the
@@ -54,13 +54,13 @@ def deepnn(x):
 	input = []
 	x_image = tf.reshape(x, [-1, 28, 28, 1])
 	hidden.append(x)
-	# First convolutional layer - maps one grayscale image to 32 feature maps.
+	# First convolutional layer - maps one grayscale image to 6 feature maps.
 	with tf.name_scope('conv1'):
 		with tf.name_scope('weights'):
-			W_conv1 = weight_variable([5, 5, 1, 32])
+			W_conv1 = weight_variable([5, 5, 1, 6])
 			variable_summaries(W_conv1)
 		with tf.name_scope('biases'):
-			b_conv1 = bias_variable([32])
+			b_conv1 = bias_variable([6])
 			variable_summaries(b_conv1)
 		with tf.name_scope('activation'):
 			input_con1 = conv2d(x_image, W_conv1) + b_conv1
@@ -72,9 +72,9 @@ def deepnn(x):
 		input.append(input_con1)
 		hidden.append(h_pool1)
 	with tf.name_scope('conv2'):
-		# Second convolutional layer -- maps 32 feature maps to 64.
+		# Second convolutional layer -- maps 6 feature maps to num_filters.
 		with tf.name_scope('weights'):
-			W_conv2 = weight_variable([5, 5, 32, 64])
+			W_conv2 = weight_variable([5, 5, 6, num_filters])
 			variable_summaries(W_conv2)
 		with tf.name_scope('biases'):
 			b_conv2 = bias_variable([64])
@@ -89,15 +89,15 @@ def deepnn(x):
 		input.append(input_con2)
 		hidden.append(h_pool2)
 	# Fully connected layer 1 -- after 2 round of downsampling, our 28x28 image
-	# is down to 7x7x64 feature maps -- maps this to 1024 features.
+	# is down to 7x7xnum_filters feature maps -- maps this to 1024 features.
 	with tf.name_scope('FC1'):
 		with tf.name_scope('weights'):
-			W_fc1 = weight_variable([7 * 7 * 64, 1024])
+			W_fc1 = weight_variable([7 * 7 * num_filters, 1024])
 			variable_summaries(W_fc1)
 		with tf.name_scope('biases'):
 			b_fc1 = bias_variable([1024])
 			variable_summaries(b_fc1)
-		h_pool2_flat = tf.reshape(h_pool2, [-1, 7 * 7 * 64])
+		h_pool2_flat = tf.reshape(h_pool2, [-1, 7 * 7 * num_filters])
 		with tf.name_scope('activation'):
 			input_fc1 = tf.matmul(h_pool2_flat, W_fc1) + b_fc1
 			h_fc1 = tf.nn.relu(input_fc1)
