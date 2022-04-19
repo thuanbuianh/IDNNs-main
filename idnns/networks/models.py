@@ -77,7 +77,7 @@ def deepnn(x, num_filters):
 			W_conv2 = weight_variable([5, 5, 6, num_filters])
 			variable_summaries(W_conv2)
 		with tf.name_scope('biases'):
-			b_conv2 = bias_variable([64])
+			b_conv2 = bias_variable([num_filters])
 			variable_summaries(b_conv2)
 		with tf.name_scope('activation'):
 			input_con2 = conv2d(h_pool1, W_conv2) + b_conv2
