@@ -92,10 +92,10 @@ def deepnn(x, num_filters):
 	# is down to 7x7xnum_filters feature maps -- maps this to 1024 features.
 	with tf.name_scope('FC1'):
 		with tf.name_scope('weights'):
-			W_fc1 = weight_variable([7 * 7 * num_filters, 1024])
+			W_fc1 = weight_variable([7 * 7 * num_filters, 128])
 			variable_summaries(W_fc1)
 		with tf.name_scope('biases'):
-			b_fc1 = bias_variable([1024])
+			b_fc1 = bias_variable([128])
 			variable_summaries(b_fc1)
 		h_pool2_flat = tf.reshape(h_pool2, [-1, 7 * 7 * num_filters])
 		with tf.name_scope('activation'):
@@ -103,23 +103,25 @@ def deepnn(x, num_filters):
 			h_fc1 = tf.nn.relu(input_fc1)
 			tf.summary.histogram('activations', h_fc1)
 
-	with tf.name_scope('drouput'):
-		keep_prob = tf.placeholder(tf.float32)
-		tf.summary.scalar('dropout_keep_probability', keep_prob)
-		h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob)
-		input.append(input_fc1)
-		hidden.append(h_fc1_drop)
+	# with tf.name_scope('drouput'):
+	# 	keep_prob = tf.placeholder(tf.float32)
+	# 	tf.summary.scalar('dropout_keep_probability', keep_prob)
+	# 	h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob)
+	# 	input.append(input_fc1)
+	# 	hidden.append(h_fc1_drop)
 	# Map the 1024 features to 10 classes, one for each digit
 	with tf.name_scope('FC2'):
 		with tf.name_scope('weights'):
-			W_fc2 = weight_variable([1024, 10])
+			W_fc2 = weight_variable([128, 10])
 			variable_summaries(W_fc2)
 		with tf.name_scope('biases'):
 			b_fc2 = bias_variable([10])
 			variable_summaries(b_fc2)
 
-	input_y_conv = tf.matmul(h_fc1_drop, W_fc2) + b_fc2
+	# input_y_conv = tf.matmul(h_fc1_drop, W_fc2) + b_fc2
+	input_y_conv = tf.matmul(h_fc1, W_fc2) + b_fc2
 	y_conv = tf.nn.softmax(input_y_conv)
 	input.append(input_y_conv)
 	hidden.append(y_conv)
-	return y_conv, keep_prob, hidden, input
+	# return y_conv, keep_prob, hidden, input
+	return y_conv, hidden, input
