@@ -25,7 +25,7 @@ class Model:
 	"""A class that represent model of network"""
 
 	def __init__(self, input_size, layerSize, num_of_classes, learning_rate_local=0.001, save_file='',
-	             activation_function=0, cov_net=False):
+	             activation_function=1, cov_net=False):
 		self.covnet = cov_net
 		self.input_size = input_size
 		self.layerSize = layerSize
