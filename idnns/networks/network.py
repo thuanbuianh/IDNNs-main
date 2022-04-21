@@ -34,6 +34,11 @@ def train_and_calc_inf_network(i, j, k, layerSize, num_of_ephocs, learning_rate_
 	network = train_network(layerSize, num_of_ephocs, learning_rate_local, batch_size, indexes, save_grads,
 	                        data_sets_org, model_type, percent_of_train, interval_accuracy_display, network_name,
 	                        cov_net)
+	
+	print('Length of ws in 1 epoch: '.format(len(network['ws'][1])))
+	for i in range(len(network['ws'][1])):
+		print('\tShape of feature map in layer {0}: {1}'.format(i+1, network['ws'][1][i].shape))
+
 	network['information'] = []
 	if calc_information:
 		print ('Calculating the infomration')
