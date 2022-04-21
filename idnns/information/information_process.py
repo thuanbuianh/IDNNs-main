@@ -30,7 +30,7 @@ def calc_information_for_layer(data, bins, unique_inverse_x, unique_inverse_y, p
 
 
 def calc_information_sampling(data, bins, pys1, pxs, label, b, b1, len_unique_a, p_YgX, unique_inverse_x,
-                              unique_inverse_y, calc_DKL=False):
+                              unique_inverse_y, x, calc_DKL=False):
 	bins = bins.astype(np.float32)
 	num_of_bins = bins.shape[0]
 	# bins = stats.mstats.mquantiles(np.squeeze(data.reshape(1, -1)), np.linspace(0,1, num=num_of_bins))
@@ -52,16 +52,16 @@ def calc_information_sampling(data, bins, pys1, pxs, label, b, b1, len_unique_a,
 		DKL_YgX_YgT = np.sum([inf_ut.KL(c_p_YgX, p_YgT.T) for c_p_YgX in p_YgX.T], axis=0)
 		H_Xgt = np.nansum(p_XgT * np.log2(p_XgT), axis=1)
 	local_IXT, local_ITY = calc_information_from_mat(PXs, PYs, p_ts, digitized, unique_inverse_x, unique_inverse_y,
-	                                                 unique_array)
+	                                                 unique_array, x, data)
 	return local_IXT, local_ITY
 
 
 def calc_information_for_layer_with_other(data, bins, unique_inverse_x, unique_inverse_y, label,
-                                          b, b1, len_unique_a, pxs, p_YgX, pys1,
+                                          b, b1, len_unique_a, pxs, p_YgX, pys1, x,
                                           percent_of_sampling=50):
 	local_IXT, local_ITY = calc_information_sampling(data, bins, pys1, pxs, label, b, b1,
 	                                                 len_unique_a, p_YgX, unique_inverse_x,
-	                                                 unique_inverse_y)
+	                                                 unique_inverse_y, x)
 	number_of_indexs = int(data.shape[1] * (1. / 100 * percent_of_sampling))
 	indexs_of_sampls = np.random.choice(data.shape[1], number_of_indexs, replace=False)
 	# if percent_of_sampling != 100:
@@ -104,7 +104,7 @@ def calc_by_sampling_neurons(ws_iter_index, num_of_samples, label, sigma, bins, 
 
 def calc_information_for_epoch(iter_index, interval_information_display, ws_iter_index, bins, unique_inverse_x,
                                unique_inverse_y, label, b, b1,
-                               len_unique_a, pys, pxs, py_x, pys1, model_path, input_size, layerSize,
+                               len_unique_a, pys, pxs, py_x, pys1, model_path, input_size, layerSize, x,
                                calc_vartional_information=False, calc_information_by_sampling=False,
                                calc_full_and_vartional=False, calc_regular_information=True, num_of_samples=100,
                                sigma=0.5, ss=[], ks=[]):
@@ -146,7 +146,7 @@ def calc_information_for_epoch(iter_index, interval_information_display, ws_iter
 			[calc_information_for_layer_with_other(data=ws_iter_index[i], bins=bins, unique_inverse_x=unique_inverse_x,
 			                                       unique_inverse_y=unique_inverse_y, label=label,
 			                                       b=b, b1=b1, len_unique_a=len_unique_a, pxs=pxs,
-			                                       p_YgX=py_x, pys1=pys1)
+			                                       p_YgX=py_x, pys1=pys1, x=x)
 			 for i in range(len(ws_iter_index))])
 
 	if np.mod(iter_index, interval_information_display) == 0:
@@ -176,7 +176,7 @@ def extract_probs(label, x):
 	return pys, pys1, p_y_given_x, b1, b, unique_a, unique_inverse_x, unique_inverse_y, pxs
 
 
-def get_information(ws, x, label, num_of_bins, interval_information_display, model, layerSize,
+def get_information(ws, x, label, num_of_bins, interval_information_display, model, layerSize, 
                     calc_parallel=False, py_hats=0):
 	"""Calculate the information for the network for all the epochs and all the layers"""
 	print('Start calculating the information...')
@@ -195,6 +195,6 @@ def get_information(ws, x, label, num_of_bins, interval_information_display, mod
 		params = np.array([calc_information_for_epoch
 		                   (i, interval_information_display, ws[i], bins, unique_inverse_x, unique_inverse_y,
 		                    label, b, b1, len(unique_a), pys,
-		                    pxs, p_y_given_x, pys1, model.save_file, x.shape[1], layerSize)
+		                    pxs, p_y_given_x, pys1, model.save_file, x.shape[1], layerSize, x=x)
 		                   for i in range(len(ws))])
 	return params
