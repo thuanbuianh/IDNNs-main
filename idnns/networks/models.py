@@ -53,7 +53,7 @@ def deepnn(x, num_filters):
 	hidden = []
 	input = []
 	x_image = tf.reshape(x, [-1, 28, 28, 1])
-	hidden.append(x)
+	hidden.append(x_image)
 	# First convolutional layer - maps one grayscale image to 6 feature maps.
 	with tf.name_scope('conv1'):
 		with tf.name_scope('weights'):
