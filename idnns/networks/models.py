@@ -102,7 +102,8 @@ def deepnn(x, num_filters):
 			input_fc1 = tf.matmul(h_pool2_flat, W_fc1) + b_fc1
 			h_fc1 = tf.nn.relu(input_fc1)
 			tf.summary.histogram('activations', h_fc1)
-
+		input.append(input_fc1)
+		hidden.append(h_fc1)
 	# with tf.name_scope('drouput'):
 	# 	keep_prob = tf.placeholder(tf.float32)
 	# 	tf.summary.scalar('dropout_keep_probability', keep_prob)
