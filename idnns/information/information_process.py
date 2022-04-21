@@ -147,7 +147,7 @@ def calc_information_for_epoch(iter_index, interval_information_display, ws_iter
 			                                       unique_inverse_y=unique_inverse_y, label=label,
 			                                       b=b, b1=b1, len_unique_a=len_unique_a, pxs=pxs,
 			                                       p_YgX=py_x, pys1=pys1, x=x)
-			 for i in range(len(ws_iter_index))])
+			 for i in range(1,3)]) # 2 lớp Conv
 
 	if np.mod(iter_index, interval_information_display) == 0:
 		print('Calculated The information of epoch number - {0}'.format(iter_index))

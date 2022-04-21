@@ -47,7 +47,7 @@ def calc_information_from_mat(px, py, ps2, data, unique_inverse_x, unique_invers
 
 	# Tính MMI dựa theo công thức (7)
 	B = np.zeros(x.shape[0])
-	As = [np.zeros(x.shape[0]) for i in range(ws_layer[-1])]
+	As = [np.zeros(x.shape[0]) for i in range(ws_layer.shape[3])]
 	for i in range(x.shape[0]):
 		for j in range(x.shape[0]):
 			B[i][j] = rbf_kernel(x[i], x[j])
